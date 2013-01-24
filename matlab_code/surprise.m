@@ -52,6 +52,8 @@ S = -logP
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
+FUNCTIONS
+%%%%%%%%%%%%%%%%%%%%%%%
 function logH = logHyperProbability(F, M, n, p)
 logH = logC(p,M) + logC(n-p,F-M) - logC(n,F);
 logH = logH/log(10);
@@ -61,8 +63,8 @@ function sum = sumFactorial(n)
 sum = 0;
 if(n > 1)
     for i = 2:n
-		sum = sum + log(i);
-	end
+        sum = sum + log(i);
+    end
 end	
 end
 
@@ -101,9 +103,8 @@ else
     logP = common + ((log(1 + 10.^diffExponent)) / log(10));
 
     if(nextLogP - logP > -4)
-		stop = true;
-	end
+        stop = true;
+    end
 end
 end
 end
-
