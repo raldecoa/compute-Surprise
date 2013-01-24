@@ -5,7 +5,7 @@ function S = surprise(F, M, n, p)
 % computeSurprise.m (which receives a network and a given partition)
 %
 % If you use this program, please cite:
-%       Aldecoa R, Marín I (2011)
+%       Aldecoa R, MarÃ­n I (2011)
 %       Deciphering network community structure by Surprise
 %       PLoS ONE 6(9): e24195
 
@@ -15,7 +15,7 @@ function S = surprise(F, M, n, p)
 % by using logarithms and other optimizations to avoid underflow problems.
 %  
 
-% Copyright (C) 2012 Rodrigo Aldecoa and Ignacio Marín
+% Copyright (C) 2012 Rodrigo Aldecoa and Ignacio MarÃ­n
 %
 %    This program is free software: you can redistribute it and/or modify
 %    it under the terms of the GNU General Public License as published by
@@ -47,10 +47,11 @@ while ~stop && (p < min)
     [stop, logP] = sumLogProbabilities(nextLogP, logP);
 end
 
-S = -logP;
+S = -logP
 
-end
 
+
+%%%%%%%%%%%%%%%%%%%%%%%
 function logH = logHyperProbability(F, M, n, p)
 logH = logC(p,M) + logC(n-p,F-M) - logC(n,F);
 logH = logH/log(10);
@@ -58,9 +59,11 @@ end
 
 function sum = sumFactorial(n)
 sum = 0;
-for i = 2:n
-    sum = sum + log(i);
-end
+if(n > 1)
+    for i = 2:n
+		sum = sum + log(i);
+	end
+end	
 end
 
 function sum = sumRange(min, max)
@@ -98,7 +101,9 @@ else
     logP = common + ((log(1 + 10.^diffExponent)) / log(10));
 
     if(nextLogP - logP > -4)
-    stop = true;
+		stop = true;
+	end
+end
 end
 end
 
