@@ -46,11 +46,12 @@ computeSurprise <-  function(networkFile, partitionFile) {
    # READ PARTITION AND NETWORK FILE
    network <- read.table(networkFile)
    part <- read.table(partitionFile)
-   g <- graph.adjlist(network)
-   g <- simplify(g, remove.loops=TRUE)
+   
+   g <- graph.edgelist(as.matrix(network))
+   g <- simplify(g)
    surprise(graph=g, membership=part[,2])  
 }
 
 
-computeSurprise("network.pairs",
-                "partition.part")
+computeSurprise(networkFile="network.pairs",
+                partitionFile="partition.part")
