@@ -46,10 +46,9 @@ computeSurprise <-  function(networkFile, partitionFile) {
    # READ PARTITION AND NETWORK FILE
    network <- read.table(networkFile)
    part <- read.table(partitionFile)
-   
-   g <- graph.edgelist(as.matrix(network))
-   g <- simplify(g)
-   surprise(graph=g, membership=part[,2])  
+   g <- graph.edgelist(as.matrix(network), directed=FALSE)
+   mem <- part[,2]
+   surprise(graph=g, membership=mem)  
 }
 
 

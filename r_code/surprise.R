@@ -30,6 +30,9 @@
 #
 #   Contact info: Rodrigo Aldecoa <raldecoa@ibv.csic.es>
 
+
+
+
 surprise <- function(graph, membership) {
   
   # Parameters F and n are always the same for a certain network
@@ -54,7 +57,7 @@ surprise <- function(graph, membership) {
     p <- p+round(length(E(graph)[ ids %--% ids ]))
   }
   
-  S <- surprise_regular(M, p, F, n)
+  S <- surprise_regular(M=M, p=p, F=F, n=n)
   
   return(S)
 }
@@ -66,7 +69,7 @@ surprise_regular <- function(M, p, F, n) {
     min <-  n
   }
   
-  logP <-  logHyperProbability(F,M,n,p)
+  logP <-  logHyperProbability(F=F,M=M,n=n,p=p)
   stop <-  0
   while (stop == 0 && (p < min)) {
     p <-  p+1
@@ -80,46 +83,56 @@ surprise_regular <- function(M, p, F, n) {
 }
 
 logHyperProbability  <-  function(F, M, n, p) {
-  logH <-  logC(p,M) + logC(n-p,F-M) - logC(n,F)
+  
+  logC(k=n-p,n1=F-M)
+  
+  logH <-  logC(k=p,n1=M) + logC(k=n-p,n=F-M) - logC(k=n,n1=F)
   logH <-  logH/log(10)
   return (logH)
 }
 
 sumFactorial <- function(n) {
   sum <-  0
-  for (i in  2:n) {
-    sum <-  sum + log(i)  
+  if(n>=2){
+    for (i in  2:n) {
+      sum <-  sum + log(i)  
+    }  
   }
+  
   return (sum)
 }
 
 sumRange <- function (min, max) {
   sum <-  0
-  for (i in  min:max) {
-    sum <-  sum + log(i)
+  if(max>=min){
+    for (i in  min:max) {
+      sum <-  sum + log(i)
+    }
   }
   return (sum)
 }
 
-logC <- function (k, n) {
-
-  if(k == n || !k || n == 0 || k>n) {
+logC <- function (k, n1) {
+  
+  if(k == n1 || !k) {
     x <-  0
   } else {
-    t <-  n - k
+    t <-  n1 - k
     if(t < k) {
       t <-  k
     }
     
-    x <-  sumRange(t+1, n) - sumFactorial(n - t)
+    x <-  sumRange(min=t+1, max=n1) - sumFactorial(n1 - t)
   }
   
   return (x)
 }
 
+
+
 sumLogProbabilities <- function(nextLogP, logP) {
   stop <- 0
-    
+  
   if(nextLogP == 0) {
     stop <- 1
   } else {
