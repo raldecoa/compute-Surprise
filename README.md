@@ -1,6 +1,6 @@
 **ComputeSurprise**: Codes to compute the Surprise of the partition of a network into communities.
 
-C++ and Matlab codes available. (If you are interested in collaborate improving the code or writing the Surprise calculation in your favorite language, just let me know. You will be very welcome!)
+C++, Matlab and R codes available. (If you are interested in collaborate improving the code or writing the Surprise calculation in your favorite language, just let me know. You will be very welcome!)
 
 For more information about Surprise, please check out:
 
