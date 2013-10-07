@@ -20,7 +20,7 @@ Copyright (C) 2012 Rodrigo Aldecoa and Ignacio Marín
  along with this program.  If not, see <http://www.gnu.org/licenses/>.  
                                                                         
 Contact info: Rodrigo Aldecoa <raldecoa@ibv.csic.es>                    
-Converted from c++/R to python-igraph by @datapornstar <datapornstar@riseup.net> 
+Converted to python-igraph by @datapornstar <datapornstar@riseup.net> 
 
  If you use this program, please cite:
        Aldecoa R, Marín I(2011)
@@ -65,7 +65,7 @@ def sum_factorial(n):
     return sum([ log(i) for i in xrange(2, n + 1) ])
 
 def sum_log_probabilities(next_logP, logP):
-    if next_logP == 0: return True
+    if next_logP == 0: return True, logP
 
     if next_logP > logP:
         common = next_logP
@@ -77,7 +77,7 @@ def sum_log_probabilities(next_logP, logP):
     logP = common + ( (log(1 + mpow(10, diff_exponent))) / log(10) )
 
     # The cumulative summation stops when the increasing is less than 10e-4
-    if next_logP - logP > -4: return True
+    if next_logP - logP > -4: return True, logP
 
     return False, logP
 
@@ -108,10 +108,24 @@ def main():
     import igraph
     if len(argv) == 2:
         g = igraph.load(argv[1])
-        if g.is_undirected():
-            cml = g.community_multilevel()
-            s = igraph_surprise(g, cml)
-            print "Surprise = %s, Modularity = %s" % (s, cml.q)
+        print g.summary()
+        c_im = g.community_infomap()
+        s_im = igraph_surprise(g, c_im)
+        print c_im.summary()
+        print "Infomap: Surprise = %s, Modularity = %s" % (s_im, c_im.q)
+        print
+
+        if not g.is_directed():
+            c_mls = g.community_multilevel(return_levels=True)
+        else:
+            c_mls = g.as_undirected().community_multilevel(return_levels=True)
+        
+        for i, c_ml in enumerate(c_mls):
+            s_ml = igraph_surprise(g, c_ml)
+            print c_ml.summary()
+            print "Multi-Level at Level %s: Surprise = %s, Modularity = %s" % (i, s_ml, c_ml.q)
+            print
+
     elif len(argv) == 3:
         g = igraph.Graph.Read_Edgelist(argv[1])
         part = [ int(l.split()[1]) for l in open(argv[2]).readlines() ]
@@ -119,7 +133,8 @@ def main():
         s = igraph_surprise(g, vc)
         print "Surprise = %s, Modularity = %s" % (s, vc.q)
     else:
-        print "Usage: %s graph-file or %s network-edge-list partition-file" % (argv[0], argv[0])
+        print "Usage: %s graph-file" % argv[0]
+        print "    or %s network-edge-list partition-file" % argv[0]
 
 if __name__ == '__main__':
     main()
