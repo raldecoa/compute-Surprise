@@ -115,6 +115,13 @@ def main():
         print "Infomap: Surprise = %s, Modularity = %s" % (s_im, c_im.q)
         print
 
+        c_fg = g.as_undirected().community_fastgreedy().as_clustering()
+        s_fg = igraph_surprise(g, c_fg)
+        print c_fg.summary()
+        print "Fast Greedy: Surprise = %s, Modularity = %s" % (s_fg, c_fg.q)
+        print
+
+
         if not g.is_directed():
             c_mls = g.community_multilevel(return_levels=True)
         else:
@@ -128,8 +135,22 @@ def main():
 
     elif len(argv) == 3:
         g = igraph.Graph.Read_Edgelist(argv[1])
-        part = [ int(l.split()[1]) for l in open(argv[2]).readlines() ]
-        vc = igraph.VertexClustering(g, part)
+        
+        # load partition data into dict with node id as index
+        tmp = dict([ map(int,l.split()) for l in open(argv[2]).readlines() ])
+
+        # re-map to 0 based partition id's
+        zmap = dict((v, k) for k,v in enumerate(set(tmp.values())))
+        p = dict([(k, zmap[v]) for k,v in tmp.iteritems() ])
+
+        # load partition data into clustering object
+        # to re-use igraph functions
+        vc = igraph.VertexClustering(g, [ p[v.index] for v in g.vs ])
+
+        print g.summary()
+        print vc.summary()
+
+        # get S
         s = igraph_surprise(g, vc)
         print "Surprise = %s, Modularity = %s" % (s, vc.q)
     else:
