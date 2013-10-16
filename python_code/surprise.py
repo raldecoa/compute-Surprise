@@ -98,7 +98,8 @@ def igraph_surprise(g, vc):
     M = sum([ ((s*(s-1))/2) for s in vc.sizes() ])
 
     # calculate p (actual number of intra-community links)
-    p = sum([ vc.subgraph(i).ecount() for i in xrange(len(vc)) ])
+    # p is equal to all edges minus community crossing edges
+    p = n - vc.crossing().count(True)
 
     print "F = %s, M = %s, n = %s, p = %s" % (F, M, n, p)
     S = compute_surprise(F, M, n, p)
