@@ -40,14 +40,16 @@ computeSurprise <-  function(networkFile, partitionFile) {
 # 
 #   Contact info: Rodrigo Aldecoa <raldecoa@ibv.csic.es>
   
-   # LOAD IGRAPH PACKAGE
+
    library(igraph)
     
-   # READ PARTITION AND NETWORK FILE
+   # read network and partition
    network <- read.table(networkFile)
    part <- read.table(partitionFile)
    g <- graph.edgelist(as.matrix(network), directed=FALSE)
-   mem <- part[,2]
+
+   part <- part[order(part$V1),] # sort table by node index
+   mem <- part[,2] # get communities from table
    surprise(graph=g, membership=mem)  
 }
 
